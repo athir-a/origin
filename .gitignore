@@ -1,0 +1,20 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*.sqlite3
+backend/venv/
+
+# Node / React
+node_modules/
+frontend/dist/
+
+# Environment variables — never commit secrets
+.env
+.env.*
+
+# OS / editor junk
+.DS_Store
+.vscode/
+
+# Agent workspace
+.freebuff/
