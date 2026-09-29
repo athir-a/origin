@@ -146,3 +146,6 @@ cd /home/seagull/origin/backend
 Every system above is deliberately **data-driven**: progression rules will live
 in structured data (required XP, unlocked buildings, dialogue), not in
 hardcoded `if` chains.
+
+
+yikes we'll see how this goes
