@@ -24,6 +24,28 @@ Phase 1 is **not** the game yet. It is the engineering foundation:
 - ⏳ **Later phases:** study timer, XP & levels, the village, NPCs, weather,
   achievements, statistics, narrative — none of that exists yet, on purpose.
 
+## The game (`Origin/`)
+
+`Origin/` is a Godot 4.7 project holding the actual game: the village, the
+study timer, XP and levels, villagers, weather and seasons, the journal,
+achievements and the give-back ending. Game code lives in `Origin/scripts/origin/`.
+
+How it plugs into the web app:
+
+- **Build:** open `Origin/project.godot` in Godot 4.7, then choose
+  *Project → Export → Web → Export Project*. The export writes to
+  `frontend/public/game/`, which git ignores.
+- **Play:** `/village` (React) shows the game in an iframe.
+- **Saves:** when the game runs inside that page, `OriginState`
+  (`Origin/scripts/origin/state.gd`) saves through `window.originBridge` to
+  `GET/PUT/DELETE /api/progress/` instead of browser storage. Each account has
+  its own journey. Run standalone, the game still saves locally.
+- **Validation:** Django (`backend/apps/progress/rules.py`) rejects impossible
+  saves: study time growing faster than real time, time going backwards, and
+  XP above what the study time allows. If you change XP numbers in
+  `content.gd` or `state.gd`, change them in `rules.py` too.
+- The dashboard stats come from `/api/progress/`.
+
 ## Tech stack
 
 | Layer     | Technology                                      |

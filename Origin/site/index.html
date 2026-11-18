@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="manus-game-loading-screen" content="1">
+  <meta name="theme-color" content="#0e1c23">
+  
+  
+  
+
+
+  <style>
+    :root { color-scheme: dark; font-family: Georgia, "Palatino Linotype", serif; background:#0e1c23; color:#f5e8c4; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; width:100%; height:100%; overflow:hidden; background:#0e1c23; }
+    #canvas { display:block; width:100%; height:100%; outline:none; image-rendering:pixelated; }
+    #loading { position:fixed; inset:0; display:grid; place-items:center; padding:24px; background:radial-gradient(ellipse at 50% 38%,#243a3c 0%,#15282d 48%,#0e1c23 100%); }
+    .card { width:min(420px,100%); padding:30px 34px 28px; text-align:center; background:#17262c; border:3px solid #40352b; box-shadow:0 0 0 3px #0a1419, 0 12px 0 #091216; }
+    .icon { display:block; width:56px; height:56px; margin:0 auto 12px; image-rendering:pixelated; }
+    h1 { margin:0; color:#f5e8c4; font:700 clamp(30px,5vw,42px)/1.1 Georgia,"Palatino Linotype",serif; letter-spacing:.14em; text-shadow:3px 3px #392b26; }
+    .tag { margin:10px 0 24px; color:#d8cba9; font:15px/1.5 system-ui,sans-serif; }
+    #loading-status { margin:0 0 12px; color:#f2dfa9; font:14px system-ui,sans-serif; }
+    progress { display:block; width:100%; height:12px; margin:0; border:2px solid #0a1419; background:#253537; accent-color:#dfad42; }
+    progress::-webkit-progress-bar { background:#253537; }
+    progress::-webkit-progress-value { background:#dfad42; }
+    progress::-moz-progress-bar { background:#dfad42; }
+    #notice { min-height:1.4em; margin:14px 0 0; color:#d9cba8; font:13px/1.45 system-ui,sans-serif; }
+    #retry { min-height:42px; margin-top:14px; padding:0 22px; border:2px solid #0b1518; background:#4c7c48; color:#fff4d5; font:600 15px system-ui,sans-serif; cursor:pointer; }
+    #retry:hover { background:#609154; }
+    #retry:focus-visible { outline:3px solid #f0c85e; outline-offset:3px; }
+    [hidden] { display:none !important; }
+    @media (max-height:460px) { #loading { padding:12px; } .card { padding:14px 24px; } .icon { width:40px;height:40px;margin-bottom:5px; } .tag { margin:6px 0 12px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; } }
+  </style>
+<!-- manus:game-sharing:start -->
+<title>Origin</title>
+<link rel="icon" type="image/png" href="./share/80e2878751daef3cc6c43752d73dfc90c60139a7136190c923a33ab0010ec533.png">
+<link rel="apple-touch-icon" href="./share/80e2878751daef3cc6c43752d73dfc90c60139a7136190c923a33ab0010ec533.png">
+<meta name="description" content="Study beneath the street lamp. Grow with your village, and help the next student begin.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Origin">
+<meta property="og:description" content="Study beneath the street lamp. Grow with your village, and help the next student begin.">
+<meta property="og:url" content="https://origin-4imzm3gz.manus.game/">
+<meta property="og:image" content="https://origin-4imzm3gz.manus.game/share/cdfb2e291ec4c87d80ba83f989419fffe417deca9e31ea8ee25a42dfe4300f28.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Origin">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Origin">
+<meta name="twitter:description" content="Study beneath the street lamp. Grow with your village, and help the next student begin.">
+<meta name="twitter:image" content="https://origin-4imzm3gz.manus.game/share/cdfb2e291ec4c87d80ba83f989419fffe417deca9e31ea8ee25a42dfe4300f28.png">
+<meta name="twitter:image:alt" content="Origin">
+<!-- manus:game-sharing:end -->
+</head>
+<body>
+  <canvas id="canvas" tabindex="0">Your browser does not support canvas.</canvas>
+  <section id="loading" aria-live="polite">
+    <div class="card">
+      <img class="icon" alt="Origin street lamp" src="data:image/png;base64,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">
+      <h1>ORIGIN</h1>
+      <p class="tag">Where your growth becomes someone else's beginning.</p>
+      <p id="loading-status">Preparing the village…</p>
+      <progress id="progress" aria-label="Loading progress"></progress>
+      <p id="notice" hidden></p>
+      <button id="retry" type="button" hidden>Retry</button>
+    </div>
+  </section>
+  <script>(function(){var R={"index.wasm":"/manus-storage/game/sha256/fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0.wasm","index.pck":"/manus-storage/game/sha256/6116cc4515abb007d7d3a4b802854dfd29bc26a33d047051489fb180fd718baf.pck"};var f=window.fetch.bind(window);window.fetch=function(i,o){var u=typeof i==="string"?i:(i&&i.url)||"";var b=u.split("?")[0].split("/").pop();return R[b]?f(R[b],o):f(i,o)};})();</script>
+<script>
+    (() => {
+      const config = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":7901700,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+      const canvas = document.getElementById('canvas');
+      const loading = document.getElementById('loading');
+      const status = document.getElementById('loading-status');
+      const progress = document.getElementById('progress');
+      const notice = document.getElementById('notice');
+      const retry = document.getElementById('retry');
+      let failed = false;
+      retry.addEventListener('click', () => window.location.reload());
+      const fail = (error) => {
+        if (failed) return;
+        failed = true;
+        status.textContent = 'The village could not finish loading.';
+        notice.hidden = false;
+        notice.textContent = error && error.message ? error.message : 'Check your connection, then retry.';
+        retry.hidden = false;
+        progress.removeAttribute('value');
+      };
+      window.addEventListener('error', (event) => { if (!loading.hidden) fail(event.error || new Error('Game startup error')); });
+      window.addEventListener('unhandledrejection', (event) => { if (!loading.hidden) fail(event.reason || new Error('Game startup error')); });
+      try {
+        const engine = new Engine(config);
+        engine.startGame({ onProgress(current, total) {
+          if (failed) return;
+          if (total > 0) {
+            progress.max = total;
+            progress.value = current;
+            const percent = Math.max(0, Math.min(100, Math.round(current * 100 / total)));
+            status.textContent = `Preparing the village… ${percent}%`;
+          } else {
+            progress.removeAttribute('value');
+            status.textContent = 'Preparing the village…';
+          }
+        }}).then(() => {
+          loading.hidden = true;
+          canvas.focus();
+        }).catch(fail);
+      } catch (error) { fail(error); }
+    })();
+  </script>
+  <noscript>JavaScript is required to play Origin.</noscript>
+</body>
+</html>
+

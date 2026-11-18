@@ -3,9 +3,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Village from "./pages/Village";
 
 // The route table: which URL renders which page.
-// /dashboard is wrapped in ProtectedRoute, which bounces visitors to /login.
+// /dashboard and /village are wrapped in ProtectedRoute, which bounces visitors to /login.
 export default function App() {
   return (
     <Routes>
@@ -17,6 +18,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/village"
+        element={
+          <ProtectedRoute>
+            <Village />
           </ProtectedRoute>
         }
       />

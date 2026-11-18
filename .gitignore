@@ -19,3 +19,6 @@ frontend/dist/
 
 # Agent workspace
 .freebuff/
+
+# Godot web export of Origin/ (rebuild with Project -> Export -> Web)
+frontend/public/game/

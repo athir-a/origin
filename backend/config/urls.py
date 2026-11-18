@@ -7,4 +7,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.core.urls")),       # public demo endpoints
     path("api/auth/", include("apps.users.urls")), # signup / login / logout / me
+    path("api/progress/", include("apps.progress.urls")),  # the game save
 ]

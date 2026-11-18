@@ -1,25 +1,34 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import VillageScene from "../components/VillageScene";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 import "./dashboard.css";
 
-// Placeholder stats — real progression arrives in Phase 2.
-const STATS = [
-  { label: "Level", value: "1" },
-  { label: "XP", value: "0" },
-  { label: "Study time", value: "0h" },
-  { label: "Consistency", value: "—" },
-];
+function formatStudyTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return minutes + "m";
+  return Math.floor(minutes / 60) + "h " + (minutes % 60) + "m";
+}
 
-// Everything except auth is still being built. Clicking one shows an honest
-// placeholder instead of pretending the feature exists.
+// Stats come from Django (/api/progress/), which derives them from the saved game.
+function statsFrom(summary) {
+  return [
+    { label: "Level", value: summary ? String(summary.level) : "…" },
+    { label: "XP", value: summary ? String(summary.xp) : "…" },
+    { label: "Study time", value: summary ? formatStudyTime(summary.study_seconds) : "…" },
+    { label: "Study days", value: summary ? String(summary.study_days) : "…" },
+  ];
+}
+
+// Studying, progress, history and achievements all live inside the game
+// (the journal opens with J). Profile and settings are still to come.
 const ACTIONS = [
-  { icon: "📚", label: "Start Studying" },
-  { icon: "🏘️", label: "Village" },
-  { icon: "📈", label: "My Progress" },
-  { icon: "🗓️", label: "Study History" },
-  { icon: "🏅", label: "Achievements" },
+  { icon: "📚", label: "Start Studying", to: "/village" },
+  { icon: "🏘️", label: "Village", to: "/village" },
+  { icon: "📈", label: "My Progress", to: "/village", hint: "Journal (J)" },
+  { icon: "🗓️", label: "Study History", to: "/village", hint: "Journal (J)" },
+  { icon: "🏅", label: "Achievements", to: "/village", hint: "Journal (J)" },
   { icon: "👤", label: "Profile" },
   { icon: "⚙️", label: "Settings" },
 ];
@@ -28,6 +37,8 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const [notice, setNotice] = useState("");
   const [backend, setBackend] = useState("checking"); // checking | up | down
+  const [summary, setSummary] = useState(null);
+  const navigate = useNavigate();
 
   // The demo round trip: React asks Django "are you awake?", which makes
   // Django touch the database. If this succeeds, the whole stack works.
@@ -36,10 +47,15 @@ export default function Dashboard() {
       .get("/health/")
       .then(() => setBackend("up"))
       .catch(() => setBackend("down"));
+    api
+      .get("/progress/")
+      .then((data) => setSummary(data.summary))
+      .catch(() => {});
   }, []);
 
-  function handleAction(label) {
-    setNotice('"' + label + '" — this part of Origin is still being built.');
+  function handleAction(action) {
+    if (action.to) navigate(action.to);
+    else setNotice('"' + action.label + '" — this part of Origin is still being built.');
   }
 
   return (
@@ -63,7 +79,9 @@ export default function Dashboard() {
       <main className="dashboard-main">
         <section className="card village-card">
           <h2>The Village</h2>
-          <VillageScene />
+          <button className="village-enter" onClick={() => navigate("/village")} title="Enter the village">
+            <VillageScene />
+          </button>
           <p className="card-note">
             Where your story starts. The village will grow as you do.
           </p>
@@ -72,7 +90,7 @@ export default function Dashboard() {
         <section className="card progress-card">
           <h2>Your Journey</h2>
           <div className="stats-grid">
-            {STATS.map((s) => (
+            {statsFrom(summary).map((s) => (
               <div className="stat" key={s.label}>
                 <span className="stat-value">{s.value}</span>
                 <span className="stat-label">{s.label}</span>
@@ -80,7 +98,11 @@ export default function Dashboard() {
             ))}
           </div>
           <p className="card-note">
-            These are placeholders for now. Real progress arrives in Phase 2.
+            {summary && !summary.has_started
+              ? "Your journey hasn't started yet. Head to the village to begin."
+              : summary
+                ? summary.xp_into_level + " / " + summary.xp_for_next_level + " XP to the next level · " + summary.achievements + " achievements"
+                : "Loading your journey…"}
           </p>
         </section>
 
@@ -91,11 +113,11 @@ export default function Dashboard() {
               <button
                 key={a.label}
                 className="action"
-                onClick={() => handleAction(a.label)}
+                onClick={() => handleAction(a)}
               >
                 <span className="action-icon">{a.icon}</span>
                 <span className="action-label">{a.label}</span>
-                <span className="action-badge">soon</span>
+                <span className="action-badge">{a.to ? a.hint || "open" : "soon"}</span>
               </button>
             ))}
           </div>

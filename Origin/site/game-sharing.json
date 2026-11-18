@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 2,
+  "publicationOrigin": "https://origin-4imzm3gz.manus.game",
+  "title": "Origin",
+  "description": "Study beneath the street lamp. Grow with your village, and help the next student begin.",
+  "defaultCaptions": {},
+  "assets": {
+    "og": {
+      "digest": "sha256:cdfb2e291ec4c87d80ba83f989419fffe417deca9e31ea8ee25a42dfe4300f28",
+      "path": "share/cdfb2e291ec4c87d80ba83f989419fffe417deca9e31ea8ee25a42dfe4300f28.png",
+      "mime": "image/png",
+      "width": 1200,
+      "height": 630,
+      "sizeBytes": 1341661,
+      "sourcePath": "assets/share/og.png"
+    },
+    "favicon": {
+      "digest": "sha256:80e2878751daef3cc6c43752d73dfc90c60139a7136190c923a33ab0010ec533",
+      "path": "share/80e2878751daef3cc6c43752d73dfc90c60139a7136190c923a33ab0010ec533.png",
+      "mime": "image/png",
+      "width": 128,
+      "height": 128,
+      "sizeBytes": 2448,
+      "sourcePath": "assets/share/favicon.png"
+    }
+  }
+}

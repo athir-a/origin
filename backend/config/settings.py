@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # Our apps
     "apps.users",
     "apps.core",
+    "apps.progress",
 ]
 
 MIDDLEWARE = [

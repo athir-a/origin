@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2,
+  "title": "Origin",
+  "description": "Study beneath the street lamp. Grow with your village, and help the next student begin.",
+  "defaultCaptions": {},
+  "assets": {
+    "og": "assets/share/og.png",
+    "favicon": "assets/share/favicon.png"
+  }
+}

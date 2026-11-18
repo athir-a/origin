@@ -1,0 +1,7 @@
+.godot/
+dist/
+node_modules/
+.manus-logs/
+
+# Art, fonts and other assets ARE committed (about 13 MB), so a fresh clone
+# can open the project in Godot without Manus's asset sync.

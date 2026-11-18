@@ -29,7 +29,7 @@ function errorMessage(data) {
   return parts.join(" ") || "Something went wrong. Please try again.";
 }
 
-async function request(path, { method = "GET", body } = {}) {
+async function request(path, { method = "GET", body, keepalive = false } = {}) {
   const headers = { "Content-Type": "application/json" };
   const token = getToken();
   if (token) headers["Authorization"] = `Token ${token}`;
@@ -38,6 +38,8 @@ async function request(path, { method = "GET", body } = {}) {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
+    // keepalive lets a final save finish even while the page is closing.
+    keepalive,
   });
 
   let data = null;
@@ -56,6 +58,8 @@ async function request(path, { method = "GET", body } = {}) {
 export const api = {
   get: (path) => request(path),
   post: (path, body) => request(path, { method: "POST", body }),
+  put: (path, body, options = {}) => request(path, { method: "PUT", body, ...options }),
+  del: (path) => request(path, { method: "DELETE" }),
 };
 
 export { getToken, setToken };
